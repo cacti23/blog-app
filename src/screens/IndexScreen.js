@@ -3,17 +3,29 @@ import {
   Text,
   View,
   FlatList,
-  Button,
   TouchableOpacity
 } from 'react-native';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Context } from '../context/BlogContext';
 import { AntDesign } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
 const IndexScreen = () => {
   const navigation = useNavigation();
-  const { state, addBlogPost, deleteBlogPost } = useContext(Context);
+  const { state, deleteBlogPost } = useContext(Context);
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerStyle: {
+        backgroundColor: 'pink'
+      },
+      headerRight: () => (
+        <TouchableOpacity onPress={() => navigation.navigate('Create')}>
+          <AntDesign name='plus' size={30} />
+        </TouchableOpacity>
+      )
+    });
+  }, [navigation]);
 
   const renderBlogList = ({ item }) => {
     return (
@@ -34,7 +46,6 @@ const IndexScreen = () => {
 
   return (
     <View>
-      <Button title='Add Post' onPress={addBlogPost} />
       <FlatList
         data={state}
         keyExtractor={(blog) => blog.title}
