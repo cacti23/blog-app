@@ -12,7 +12,7 @@ import { useNavigation } from '@react-navigation/native';
 
 const IndexScreen = () => {
   const navigation = useNavigation();
-  const { state, deleteBlogPost } = useContext(Context);
+  const { state, deleteBlogPost, getBlogPosts } = useContext(Context);
 
   useEffect(() => {
     navigation.setOptions({
@@ -26,6 +26,19 @@ const IndexScreen = () => {
       )
     });
   }, [navigation]);
+
+  useEffect(() => {
+    getBlogPosts();
+
+    // any time this screen is primary focus this function will be invoked
+    const listener = navigation.addListener('focus', () => {
+      getBlogPosts();
+    });
+
+    return () => {
+      listener.remove();
+    };
+  }, []);
 
   const renderBlogList = ({ item }) => {
     return (
